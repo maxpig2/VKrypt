@@ -13,6 +13,7 @@
 #include "VKrypt_pipeline.h"
 #include "VKrypt_swap_chain.h"
 #include "VKrypt_device.h"
+#include "VKrypt_mesh.h"
 
 //std
 #include <memory>
@@ -34,7 +35,7 @@ namespace VKrypt {
         Test &operator=(const Test&) = delete;
 
     private:
-
+        void loadMeshes();
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
@@ -46,8 +47,7 @@ namespace VKrypt {
         std::unique_ptr<VKryptPipeline> VKrypt_pipeline;
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;
-        //VKryptPipeline VKryptPipeline{VKrypt_device,"C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_shader.vert.spv","C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_shader.frag.spv",VKryptPipeline::defaultPipelineConfigInfo(Width,Height)};
-
+       std::unique_ptr<VKryptMesh> VKrypt_mesh;
     };
 
 }

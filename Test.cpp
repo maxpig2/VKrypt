@@ -5,10 +5,12 @@
 #include "Test.h"
 
 #include <array>
+#include <vector>
 
 namespace VKrypt {
 
     Test::Test() {
+        loadMeshes();
         createPipelineLayout();
         createPipeline();
         createCommandBuffers();
@@ -24,6 +26,15 @@ namespace VKrypt {
             drawFrame();
         }
         vkDeviceWaitIdle(VKrypt_device.device());
+    }
+
+    void Test::loadMeshes() {
+        std::vector<VKryptMesh::Vertex> vertices {
+            {{0.0f, -0.5f}},
+            {{0.5f, 0.5f}},
+            {{-0.5f, 0.5f}}
+        };
+        VKrypt_mesh = std::make_unique<VKryptMesh>(VKrypt_device, vertices);
     }
 
     void Test::createPipelineLayout() {
@@ -87,7 +98,8 @@ namespace VKrypt {
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
             VKrypt_pipeline->bind(commandBuffers[i]);
-            vkCmdDraw(commandBuffers[i], 3,1,0,0);
+            VKrypt_mesh->bind(commandBuffers[i]);
+            VKrypt_mesh->draw(commandBuffers[i]);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 

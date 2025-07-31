@@ -14,8 +14,9 @@ namespace VKrypt {
         public:
 
         struct Vertex {
-            static std::vector<VkVertexInputBindingDescription> getBindingDescription();
-            static std::vector<VkVertexInputAttributeDescription> getAttributeDescription();
+            glm::vec2 position;
+            static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
+            static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
         };
 
         VKryptMesh( VKryptDevice &device,const std::vector<Vertex> &vertices);
@@ -28,8 +29,8 @@ namespace VKrypt {
         void draw(VkCommandBuffer commandBuffer);
 
         private:
-        void createVertexBuffer(const std::vector<Vertex> &vertices);
-        VKryptDevice &device;
+        void createVertexBuffers(const std::vector<Vertex> &vertices);
+        VKryptDevice &VKrypt_device;
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
         uint32_t vertexCount;
