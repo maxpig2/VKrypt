@@ -27,12 +27,16 @@ namespace VKrypt {
             bool shouldClose() {return glfwWindowShouldClose(window);}
 
             VkExtent2D getExtent() {return {static_cast<uint32_t>(windowWidth), static_cast<uint32_t>(windowHeight)};}
+            bool wasWindowResized(){return framebufferResized;}
+            void resetWindowResizedFlag(){framebufferResized = false;}
 
             void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
         private:
+        static void framebufferResizeCallback(GLFWwindow *window, int width, int height);
             void initWindow();
-            const int windowWidth;
-            const int windowHeight;
+            int windowWidth;
+            int windowHeight;
+            bool framebufferResized = false;
             std::string windowName;
             GLFWwindow* window;
     };

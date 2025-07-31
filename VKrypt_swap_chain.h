@@ -8,6 +8,7 @@
 // std lib headers
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace VKrypt {
 
@@ -16,6 +17,7 @@ class VKryptSwapChain {
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
   VKryptSwapChain(VKryptDevice &deviceRef, VkExtent2D windowExtent);
+  VKryptSwapChain(VKryptDevice &deviceRef, VkExtent2D windowExtent, std::shared_ptr<VKryptSwapChain> previousSwapChain);
   ~VKryptSwapChain();
 
   VKryptSwapChain(const VKryptSwapChain &) = delete;
@@ -39,6 +41,7 @@ class VKryptSwapChain {
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
  private:
+  void init();
   void createSwapChain();
   void createImageViews();
   void createDepthResources();
@@ -69,6 +72,7 @@ class VKryptSwapChain {
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;
+    std::shared_ptr<VKryptSwapChain> oldSwapChain;
 
   std::vector<VkSemaphore> imageAvailableSemaphores;
   std::vector<VkSemaphore> renderFinishedSemaphores;

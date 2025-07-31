@@ -13,6 +13,17 @@ namespace VKrypt {
 
 VKryptSwapChain::VKryptSwapChain(VKryptDevice &deviceRef, VkExtent2D extent)
     : device{deviceRef}, windowExtent{extent} {
+  init();
+}
+
+  VKryptSwapChain::VKryptSwapChain(VKryptDevice &deviceRef, VkExtent2D extent, std::shared_ptr<VKryptSwapChain> previousSwapChain)
+    : device{deviceRef}, windowExtent{extent}, oldSwapChain {previousSwapChain} {
+    init();
+
+    oldSwapChain = nullptr;
+}
+
+  void VKryptSwapChain::init() {
   createSwapChain();
   createImageViews();
   createRenderPass();
@@ -162,7 +173,7 @@ void VKryptSwapChain::createSwapChain() {
   createInfo.presentMode = presentMode;
   createInfo.clipped = VK_TRUE;
 
-  createInfo.oldSwapchain = VK_NULL_HANDLE;
+  createInfo.oldSwapchain = oldSwapChain ? oldSwapChain->swapChain : nullptr;
 
   if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
     throw std::runtime_error("failed to create swap chain!");

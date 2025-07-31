@@ -12,7 +12,7 @@ namespace VKrypt {
     VKrypt2D_Application::VKrypt2D_Application() {
         loadMeshes(VKrypt_2DShapes::SimpleTriangle);
         createPipelineLayout();
-        createPipeline();
+        recreateSwapChain();
         createCommandBuffers();
     }
 
@@ -107,8 +107,9 @@ namespace VKrypt {
     }
 
     void VKrypt2D_Application::createPipeline() {
-        auto pipelineConfig = VKryptPipeline::defaultPipelineConfigInfo(VKrypt_swap_chain.width(),VKrypt_swap_chain.height());
-        pipelineConfig.renderPass = VKrypt_swap_chain.getRenderPass();
+        PipelineConfigInfo pipelineConfig {}; //= VKryptPipeline::defaultPipelineConfigInfo(VKrypt_swap_chain->width(),VKrypt_swap_chain->height());
+        VKryptPipeline::defaultPipelineConfigInfo(pipelineConfig);
+        pipelineConfig.renderPass = VKrypt_swap_chain->getRenderPass();
         pipelineConfig.pipelineLayout = pipelineLayout;
         VKrypt_pipeline = std::make_unique<VKryptPipeline>(
             VKrypt_device,
@@ -118,8 +119,33 @@ namespace VKrypt {
             );
     }
 
+    void VKrypt2D_Application::recreateSwapChain() {
+        auto extent = VKrypt_window.getExtent();
+        while (extent.width == 0 || extent.height == 0) {
+            extent = VKrypt_window.getExtent();
+            glfwWaitEvents();
+        }
+
+        vkDeviceWaitIdle(VKrypt_device.device());
+        //VKrypt_swap_chain = nullptr;
+        if (VKrypt_swap_chain == nullptr) {
+            VKrypt_swap_chain = nullptr;
+            VKrypt_swap_chain = std::make_unique<VKryptSwapChain>(VKrypt_device,extent);
+        } else {
+            VKrypt_swap_chain = nullptr;
+            VKrypt_swap_chain = std::make_unique<VKryptSwapChain>(VKrypt_device,extent, std::move(VKrypt_swap_chain));
+            if (VKrypt_swap_chain->imageCount() != commandBuffers.size()) {
+                freeCommandBuffers();
+                createCommandBuffers();
+            }
+        }
+
+        createPipeline();
+    }
+
+
     void VKrypt2D_Application::createCommandBuffers() {
-        commandBuffers.resize(VKrypt_swap_chain.imageCount());
+        commandBuffers.resize(VKrypt_swap_chain->imageCount());
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -129,49 +155,79 @@ namespace VKrypt {
         if (vkAllocateCommandBuffers(VKrypt_device.device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
             throw std::runtime_error("Failed to allocate command buffers!");
         }
-        for (int i = 0; i < commandBuffers.size(); i++) {
-            VkCommandBufferBeginInfo beginInfo{};
-            beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-            if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
-                throw std::runtime_error("Failed to begin recording command buffer!");
-            }
+    }
 
-            VkRenderPassBeginInfo renderPassInfo{};
-            renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-            renderPassInfo.renderPass = VKrypt_swap_chain.getRenderPass();
-            renderPassInfo.framebuffer = VKrypt_swap_chain.getFrameBuffer(static_cast<uint32_t>(i));
+    void VKrypt2D_Application::freeCommandBuffers() {
+        vkFreeCommandBuffers(VKrypt_device.device(), VKrypt_device.getCommandPool(), static_cast<float>(commandBuffers.size()), commandBuffers.data());
+        commandBuffers.clear();
+    }
 
-            renderPassInfo.renderArea.offset = {0,0};
-            renderPassInfo.renderArea.extent = VKrypt_swap_chain.getSwapChainExtent();
+    void VKrypt2D_Application::recordCommandBuffer(int imageIndex) {
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        if (vkBeginCommandBuffer(commandBuffers[imageIndex], &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to begin recording command buffer!");
+        }
 
-            std::array<VkClearValue, 2> clearValues{};
-            clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
-            clearValues[1].depthStencil = {1.0f, 0};
+        VkRenderPassBeginInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = VKrypt_swap_chain->getRenderPass();
+        renderPassInfo.framebuffer = VKrypt_swap_chain->getFrameBuffer(static_cast<uint32_t>(imageIndex));
 
-            renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-            renderPassInfo.pClearValues = clearValues.data();
+        renderPassInfo.renderArea.offset = {0,0};
+        renderPassInfo.renderArea.extent = VKrypt_swap_chain->getSwapChainExtent();
 
-            vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        std::array<VkClearValue, 2> clearValues{};
+        clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
+        clearValues[1].depthStencil = {1.0f, 0};
 
-            VKrypt_pipeline->bind(commandBuffers[i]);
-            VKrypt_mesh->bind(commandBuffers[i]);
-            VKrypt_mesh->draw(commandBuffers[i]);
+        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+        renderPassInfo.pClearValues = clearValues.data();
 
-            vkCmdEndRenderPass(commandBuffers[i]);
+        vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-            if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
-                throw std::runtime_error("Failed to record command buffer!");
-            }
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = static_cast<float>(VKrypt_swap_chain->getSwapChainExtent().width);
+        viewport.height = static_cast<float>(VKrypt_swap_chain->getSwapChainExtent().height);
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        VkRect2D scissor{{0,0}, VKrypt_swap_chain->getSwapChainExtent()};
+        vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+        vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
+
+        VKrypt_pipeline->bind(commandBuffers[imageIndex]);
+        VKrypt_mesh->bind(commandBuffers[imageIndex]);
+        VKrypt_mesh->draw(commandBuffers[imageIndex]);
+
+        vkCmdEndRenderPass(commandBuffers[imageIndex]);
+
+        if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to record command buffer!");
         }
     }
+
+
+
     void VKrypt2D_Application::drawFrame() {
         uint32_t imageIndex = 0;
-        auto result = VKrypt_swap_chain.acquireNextImage(&imageIndex);
+        auto result = VKrypt_swap_chain->acquireNextImage(&imageIndex);
+        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+            recreateSwapChain();
+            return;
+        }
         if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("Failed to acquire swap chain image!");
         }
-        result = VKrypt_swap_chain.submitCommandBuffers(&commandBuffers[imageIndex],&imageIndex);
+        recordCommandBuffer(imageIndex);
+        result = VKrypt_swap_chain->submitCommandBuffers(&commandBuffers[imageIndex],&imageIndex);
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || VKrypt_window.wasWindowResized()) {
+            VKrypt_window.resetWindowResizedFlag();
+            recreateSwapChain();
+            return;
+        }
         if (result != VK_SUCCESS) {
             throw std::runtime_error("Failed to submit swap chain command buffer!");
         }

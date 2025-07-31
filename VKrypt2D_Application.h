@@ -39,13 +39,16 @@ namespace VKrypt {
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
+        void freeCommandBuffers();
         void drawFrame();
+        void recreateSwapChain();
+        void recordCommandBuffer(int imageIndex);
         void sierpinski(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right,glm::vec2 top);
         void hexFlower(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 center,float radius);
 
         VKryptWindow VKrypt_window{Width,Height,"Test"};
         VKryptDevice VKrypt_device{VKrypt_window};
-        VKryptSwapChain VKrypt_swap_chain{VKrypt_device,VKrypt_window.getExtent()};
+        std::unique_ptr<VKryptSwapChain> VKrypt_swap_chain;
         std::unique_ptr<VKryptPipeline> VKrypt_pipeline;
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;

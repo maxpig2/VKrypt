@@ -7,6 +7,6 @@ layout (location = 0) out vec4 outColor;
 
 void main() {
 
-    vec3 colorTint = vec3(1.0f,1.0f,1.0f);
-    outColor = vec4(vertexColor*colorTint, 1.0);
+    vec3 colorTint = vec3(2.0f,2.0f,2.0f);
+    outColor = vec4(vertexColor * colorTint, 1.0);
 }
