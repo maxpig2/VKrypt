@@ -1,0 +1,2 @@
+call C:\vcpkg\installed\x64-windows\tools\shaderc\glslc shaders/simple_shader.vert -o shaders/simple_shader.vert.spv
+call C:\vcpkg\installed\x64-windows\tools\shaderc\glslc shaders/simple_shader.frag -o shaders/simple_shader.frag.spv
