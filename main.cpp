@@ -37,14 +37,14 @@
     return 0;
 }*/
 
-#include "Test.h"
+#include "VKrypt2D_Application.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 
 int main() {
-    VKrypt::Test app{};
+    VKrypt::VKrypt2D_Application app{};
 
     try {
         app.run();

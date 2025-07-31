@@ -20,8 +20,8 @@ find_package(glfw3 3.4 REQUIRED)
 add_executable(VKrypt main.cpp
         VKrypt_window.h
         VKrypt_window.cpp
-        Test.h
-        Test.cpp
+        VKrypt2D_Application.h
+        VKrypt2D_Application.cpp
         VKrypt_pipeline.h
         VKrypt_pipeline.cpp
         VKrypt_device.h

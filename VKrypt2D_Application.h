@@ -1,12 +1,6 @@
 //
 // Created by maxtj on 30/07/2025.
 //
-
-#ifndef TEST_H
-#define TEST_H
-
-#endif //TEST_H
-
 #pragma once
 
 #include "VKrypt_window.h"
@@ -21,25 +15,33 @@
 
 namespace VKrypt {
 
-    class Test {
+    enum class VKrypt_2DShapes : uint32_t {
+        SimpleTriangle = 0,
+        SierpinskiTriangle = 1,
+        HexFlower = 2
+    };
+
+    class VKrypt2D_Application {
         public:
         static constexpr int Width = 800;
         static constexpr int Height = 600;
 
         void run();
 
-        Test();
-        ~Test();
+        VKrypt2D_Application();
+        ~VKrypt2D_Application();
 
-        Test(const Test&) = delete;
-        Test &operator=(const Test&) = delete;
+        VKrypt2D_Application(const VKrypt2D_Application&) = delete;
+        VKrypt2D_Application &operator=(const VKrypt2D_Application&) = delete;
 
     private:
-        void loadMeshes();
+        void loadMeshes(VKrypt_2DShapes shape);
         void createPipelineLayout();
         void createPipeline();
         void createCommandBuffers();
         void drawFrame();
+        void sierpinski(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right,glm::vec2 top);
+        void hexFlower(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 center,float radius);
 
         VKryptWindow VKrypt_window{Width,Height,"Test"};
         VKryptDevice VKrypt_device{VKrypt_window};
