@@ -10,7 +10,7 @@
 namespace VKrypt {
 
     VKrypt2D_Application::VKrypt2D_Application() {
-        loadMeshes(VKrypt_2DShapes::HexFlower);
+        loadMeshes(VKrypt_2DShapes::SimpleTriangle);
         createPipelineLayout();
         createPipeline();
         createCommandBuffers();
@@ -32,9 +32,9 @@ namespace VKrypt {
         std::vector<VKryptMesh::Vertex> vertices{};
         if (shape==VKrypt_2DShapes::SimpleTriangle) {
            vertices= {
-           {{0.0f, -0.5f}},
-           {{0.5f, 0.5f}},
-           {{-0.5f, 0.5f}}
+           {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+           {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+           {{-0.5f, 0.5f}, {0.0f,0.0f,1.0f}}
             };
         }
         else if (shape==VKrypt_2DShapes::SierpinskiTriangle){
