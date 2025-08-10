@@ -29,7 +29,12 @@ add_executable(VKrypt main.cpp
         VKrypt_swap_chain.h
         VKrypt_swap_chain.cpp
         VKrypt_mesh.h
-        VKrypt_mesh.cpp)
+        VKrypt_mesh.cpp
+        VKrypt_game_object.h
+        VKrypt_renderer.h
+        VKrypt_renderer.cpp
+        VKrypt_2D_render_system.h
+        VKrypt_2D_render_system.cpp)
 
 # Link libraries
 target_link_libraries(VKrypt ${Vulkan_LIBRARIES} )

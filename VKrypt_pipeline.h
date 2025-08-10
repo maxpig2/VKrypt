@@ -39,7 +39,7 @@ namespace VKrypt {
             VKryptDevice& device,
             const std::string& vertFilepath,
             const std::string& fragFilepath,
-            const PipelineConfigInfo configInfo);
+            const PipelineConfigInfo &configInfo);
 
         ~VKryptPipeline();
 
@@ -57,8 +57,8 @@ namespace VKrypt {
         void createShaderModule(const std::vector<char>& code, VkShaderModule& shaderModule);
 
         VKryptDevice& VKryptDevice;
-        VkPipeline graphicsPipeline;
-        VkShaderModule vertShaderModule;
-        VkShaderModule fragShaderModule;
+        VkPipeline graphicsPipeline{};
+        VkShaderModule vertShaderModule{};
+        VkShaderModule fragShaderModule{};
     };
 }

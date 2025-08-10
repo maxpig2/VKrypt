@@ -15,7 +15,7 @@ namespace VKrypt {
         VKrypt::VKryptDevice& device,
         const std::string& vertFilepath,
         const std::string& fragFilepath,
-        const PipelineConfigInfo configInfo) : VKryptDevice{device}
+        const PipelineConfigInfo &configInfo) : VKryptDevice{device}
     {
         createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
     }

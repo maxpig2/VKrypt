@@ -32,9 +32,9 @@ namespace VKrypt {
         private:
         void createVertexBuffers(const std::vector<Vertex> &vertices);
         VKryptDevice &VKrypt_device;
-        VkBuffer vertexBuffer;
-        VkDeviceMemory vertexBufferMemory;
-        uint32_t vertexCount;
+        VkBuffer vertexBuffer{};
+        VkDeviceMemory vertexBufferMemory{};
+        uint32_t vertexCount{};
 
 
     };

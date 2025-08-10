@@ -8,6 +8,8 @@
 #include "VKrypt_swap_chain.h"
 #include "VKrypt_device.h"
 #include "VKrypt_mesh.h"
+#include "VKrypt_game_object.h"
+#include "VKrypt_renderer.h"
 
 //std
 #include <memory>
@@ -35,24 +37,14 @@ namespace VKrypt {
         VKrypt2D_Application &operator=(const VKrypt2D_Application&) = delete;
 
     private:
-        void loadMeshes(VKrypt_2DShapes shape);
-        void createPipelineLayout();
-        void createPipeline();
-        void createCommandBuffers();
-        void freeCommandBuffers();
-        void drawFrame();
-        void recreateSwapChain();
-        void recordCommandBuffer(int imageIndex);
+        void loadGameObjects(VKrypt_2DShapes shape);
         void sierpinski(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right,glm::vec2 top);
         void hexFlower(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 center,float radius);
 
         VKryptWindow VKrypt_window{Width,Height,"Test"};
         VKryptDevice VKrypt_device{VKrypt_window};
-        std::unique_ptr<VKryptSwapChain> VKrypt_swap_chain;
-        std::unique_ptr<VKryptPipeline> VKrypt_pipeline;
-        VkPipelineLayout pipelineLayout;
-        std::vector<VkCommandBuffer> commandBuffers;
-       std::unique_ptr<VKryptMesh> VKrypt_mesh;
+        std::vector<VKryptGameObject> gameObjects;
+        VKryptRenderer VKrypt_renderer{VKrypt_window,VKrypt_device};
     };
 
 }
