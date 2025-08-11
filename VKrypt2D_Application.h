@@ -5,7 +5,6 @@
 
 #include "VKrypt_window.h"
 #include "VKrypt_pipeline.h"
-#include "VKrypt_swap_chain.h"
 #include "VKrypt_device.h"
 #include "VKrypt_mesh.h"
 #include "VKrypt_game_object.h"
@@ -37,11 +36,11 @@ namespace VKrypt {
         VKrypt2D_Application &operator=(const VKrypt2D_Application&) = delete;
 
     private:
-        void loadGameObjects(VKrypt_2DShapes shape);
+        virtual void loadGameObjects();
         void sierpinski(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right,glm::vec2 top);
         void hexFlower(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 center,float radius);
 
-        VKryptWindow VKrypt_window{Width,Height,"Test"};
+        VKryptWindow VKrypt_window{Width,Height,"VKrypt 2D"};
         VKryptDevice VKrypt_device{VKrypt_window};
         std::vector<VKryptGameObject> gameObjects;
         VKryptRenderer VKrypt_renderer{VKrypt_window,VKrypt_device};

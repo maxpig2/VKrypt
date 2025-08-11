@@ -18,7 +18,7 @@
 namespace VKrypt {
 
     VKrypt2D_Application::VKrypt2D_Application() {
-        loadGameObjects(VKrypt_2DShapes::SimpleTriangle);
+        loadGameObjects();
     }
 
     VKrypt2D_Application::~VKrypt2D_Application() {}
@@ -38,7 +38,7 @@ namespace VKrypt {
         vkDeviceWaitIdle(VKrypt_device.device());
     }
 
-    void VKrypt2D_Application::loadGameObjects(VKrypt_2DShapes shape) {
+    void VKrypt2D_Application::loadGameObjects() {
         /*
         std::vector<VKryptMesh::Vertex> vertices{};
         if (shape==VKrypt_2DShapes::SimpleTriangle) {
