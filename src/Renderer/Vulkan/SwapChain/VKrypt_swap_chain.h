@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VKrypt_device.h"
+#include "../Device/VKrypt_device.h"
 
 // vulkan headers
 #include <vulkan/vulkan.h>

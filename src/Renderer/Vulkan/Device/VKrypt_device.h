@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VKrypt_window.h"
+#include "../Window/VKrypt_window.h"
 
 // std lib headers
 #include <string>

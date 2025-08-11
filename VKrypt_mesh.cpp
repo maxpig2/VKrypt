@@ -7,7 +7,7 @@
 #include <ranges>
 #include <vector>
 
-#include "VKrypt_device.h"
+#include "src/Renderer/Vulkan/Device/VKrypt_device.h"
 
 namespace VKrypt {
 

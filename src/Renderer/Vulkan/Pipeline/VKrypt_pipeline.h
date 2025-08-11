@@ -12,7 +12,7 @@
 #pragma once
 
 #define GLFW_INCLUDE_VULKAN
-#include "VKrypt_device.h"
+#include "../Device/VKrypt_device.h"
 #include <string>
 
 namespace VKrypt {

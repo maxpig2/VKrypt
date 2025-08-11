@@ -3,10 +3,10 @@
 //
 #pragma once
 
-#include "../../VKrypt_window.h"
-#include "../../VKrypt_pipeline.h"
-#include "../../VKrypt_swap_chain.h"
-#include "../../VKrypt_device.h"
+#include "../../src/Renderer/Vulkan/Window/VKrypt_window.h"
+#include "../../src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.h"
+#include "../../src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.h"
+#include "../../src/Renderer/Vulkan/Device/VKrypt_device.h"
 #include "../../VKrypt_mesh.h"
 #include "../../VKrypt_game_object.h"
 #include "../../VKrypt_renderer.h"

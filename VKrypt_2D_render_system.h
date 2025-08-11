@@ -1,8 +1,8 @@
 #pragma once
 
-#include "VKrypt_device.h"
+#include "src/Renderer/Vulkan/Device/VKrypt_device.h"
 #include "VKrypt_game_object.h"
-#include "VKrypt_pipeline.h"
+#include "src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.h"
 
 // std
 #include <memory>

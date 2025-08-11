@@ -1,6 +1,6 @@
 #include "VKrypt_renderer.h"
-#include "VKrypt_window.h"
-#include "VKrypt_device.h"
+#include "src/Renderer/Vulkan/Window/VKrypt_window.h"
+#include "src/Renderer/Vulkan/Device/VKrypt_device.h"
 
 // std
 #include <array>

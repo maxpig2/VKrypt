@@ -5,7 +5,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <iostream>
 
-#include "VKrypt2D_Application.h"
+#include "Applications/Templates/VKrypt2D_Application.h"
 #include "Applications/NBodyProblem/NBodyProblem_Application.h"
 
 #include <cstdlib>

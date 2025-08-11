@@ -1,8 +1,8 @@
 #pragma once
 
-#include "VKrypt_device.h"
-#include "VKrypt_swap_chain.h"
-#include "VKrypt_window.h"
+#include "src/Renderer/Vulkan/Device/VKrypt_device.h"
+#include "src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.h"
+#include "src/Renderer/Vulkan/Window/VKrypt_window.h"
 
 // std
 #include <cassert>

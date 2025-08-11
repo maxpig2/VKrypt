@@ -18,16 +18,16 @@ endif ()]]
 find_package(glfw3 3.4 REQUIRED)
 
 add_executable(VKrypt main.cpp
-        VKrypt_window.h
-        VKrypt_window.cpp
-        VKrypt2D_Application.h
-        VKrypt2D_Application.cpp
-        VKrypt_pipeline.h
-        VKrypt_pipeline.cpp
-        VKrypt_device.h
-        VKrypt_device.cpp
-        VKrypt_swap_chain.h
-        VKrypt_swap_chain.cpp
+        src/Renderer/Vulkan/Window/VKrypt_window.h
+        src/Renderer/Vulkan/Window/VKrypt_window.cpp
+        Applications/Templates/VKrypt2D_Application.h
+        Applications/Templates/VKrypt2D_Application.cpp
+        src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.h
+        src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.cpp
+        src/Renderer/Vulkan/Device/VKrypt_device.h
+        src/Renderer/Vulkan/Device/VKrypt_device.cpp
+        src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.h
+        src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.cpp
         VKrypt_mesh.h
         VKrypt_mesh.cpp
         VKrypt_game_object.h
