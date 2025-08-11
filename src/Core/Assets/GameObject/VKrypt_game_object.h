@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "VKrypt_mesh.h"
+#include "../Mesh/VKrypt_mesh.h"
 
 #include <memory>
 

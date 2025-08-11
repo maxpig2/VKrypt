@@ -28,9 +28,9 @@ add_executable(VKrypt main.cpp
         src/Renderer/Vulkan/Device/VKrypt_device.cpp
         src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.h
         src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.cpp
-        VKrypt_mesh.h
-        VKrypt_mesh.cpp
-        VKrypt_game_object.h
+        src/Core/Assets/Mesh/VKrypt_mesh.h
+        src/Core/Assets/Mesh/VKrypt_mesh.cpp
+        src/Core/Assets/GameObject/VKrypt_game_object.h
         VKrypt_renderer.h
         VKrypt_renderer.cpp
         VKrypt_2D_render_system.h

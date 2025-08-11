@@ -7,8 +7,8 @@
 #include "../../src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.h"
 #include "../../src/Renderer/Vulkan/SwapChain/VKrypt_swap_chain.h"
 #include "../../src/Renderer/Vulkan/Device/VKrypt_device.h"
-#include "../../VKrypt_mesh.h"
-#include "../../VKrypt_game_object.h"
+#include "../../src/Core/Assets/Mesh/VKrypt_mesh.h"
+#include "../../src/Core/Assets/GameObject/VKrypt_game_object.h"
 #include "../../VKrypt_renderer.h"
 
 //std

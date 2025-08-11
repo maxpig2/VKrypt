@@ -2,7 +2,7 @@
 // Created by maxtj on 31/07/2025.
 //
 
-#include "../../../../VKrypt_mesh.h"
+#include "../../../Core/Assets/Mesh/VKrypt_mesh.h"
 #include "VKrypt_pipeline.h"
 #include <fstream>
 #include <stdexcept>

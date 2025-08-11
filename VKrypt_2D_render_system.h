@@ -1,7 +1,7 @@
 #pragma once
 
 #include "src/Renderer/Vulkan/Device/VKrypt_device.h"
-#include "VKrypt_game_object.h"
+#include "src/Core/Assets/GameObject/VKrypt_game_object.h"
 #include "src/Renderer/Vulkan/Pipeline/VKrypt_pipeline.h"
 
 // std
