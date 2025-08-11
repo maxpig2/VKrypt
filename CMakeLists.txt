@@ -37,6 +37,8 @@ add_executable(VKrypt main.cpp
         VKrypt_2D_render_system.cpp
         Applications/NBodyProblem/NBodyProblem_Application.cpp
         Applications/NBodyProblem/NBodyProblem_Application.h
+        src/Core/Assets/Mesh/ImplicitMeshes2D.h
+        src/Core/Assets/Mesh/ImplicitMeshes2D.cpp
 )
 
 # Link libraries
