@@ -48,6 +48,10 @@ add_executable(VKrypt main.cpp
         Applications/NBodyProblem/NBodyProblem_Application.h
         src/Core/Assets/Mesh/ImplicitMeshes2D.h
         src/Core/Assets/Mesh/ImplicitMeshes2D.cpp
+        VKrypt_camera.h
+        VKrypt_camera.cpp
+        src/Core/Assets/Input/Keyboard_Controller.h
+        src/Core/Assets/Input/Keyboard_Controller.cpp
 
 )
 
