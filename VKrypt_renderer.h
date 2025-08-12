@@ -22,6 +22,7 @@ namespace VKrypt {
         VKryptRenderer &operator=(const VKryptRenderer &) = delete;
 
         VkRenderPass getSwapChainRenderPass() const { return VKrypt_swap_chain->getRenderPass(); }
+        float getAspectRatio() const {return VKrypt_swap_chain->extentAspectRatio();}
         bool isFrameInProgress() const { return isFrameStarted; }
 
         VkCommandBuffer getCurrentCommandBuffer() const {

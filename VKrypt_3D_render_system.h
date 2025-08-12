@@ -8,6 +8,7 @@
 
 #include "src/Core/Assets/GameObject/VKrypt_3D_game_object.h"
 #include "src/Renderer/Vulkan/Pipeline/VKrypt_3D_pipeline.h"
+#include "VKrypt_camera.h"
 
 namespace VKrypt {
     class VKrypt3DRenderSystem {
@@ -18,7 +19,7 @@ namespace VKrypt {
         VKrypt3DRenderSystem(const VKrypt3DRenderSystem &) = delete;
         VKrypt3DRenderSystem &operator=(const VKrypt3DRenderSystem &) = delete;
 
-        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VKryptGameObject3D> &gameObjects);
+        void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<VKryptGameObject3D> &gameObjects, const VKryptCamera &camera);
 
     private:
         void createPipelineLayout();
