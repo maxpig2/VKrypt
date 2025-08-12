@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 
 namespace VKrypt {
-    class VKryptMesh {
+    class VKryptMesh2D {
         public:
 
         struct Vertex {
@@ -20,11 +20,11 @@ namespace VKrypt {
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
         };
 
-        VKryptMesh( VKryptDevice &device,const std::vector<Vertex> &vertices);
-        ~VKryptMesh();
+        VKryptMesh2D( VKryptDevice &device,const std::vector<Vertex> &vertices);
+        ~VKryptMesh2D();
 
-        VKryptMesh(const VKryptMesh&) = delete;
-        VKryptMesh &operator=(const VKryptMesh&) = delete;
+        VKryptMesh2D(const VKryptMesh2D&) = delete;
+        VKryptMesh2D &operator=(const VKryptMesh2D&) = delete;
 
         void bind(VkCommandBuffer commandBuffer);
         void draw(VkCommandBuffer commandBuffer);

@@ -4,7 +4,7 @@
 
 namespace VKrypt {
 
-    void ImplicitMeshes2D::Triangle(std::vector<VKryptMesh::Vertex> &vertices) {
+    void ImplicitMeshes2D::Triangle(std::vector<VKryptMesh2D::Vertex> &vertices) {
         // Define an upright triangle centered at the origin
         glm::vec2 top(0.0f, -0.5f);
         glm::vec2 left(0.5f, 0.5f);
@@ -16,7 +16,7 @@ namespace VKrypt {
         vertices.push_back({ left,  glm::vec3(0.0f, 0.0f, 1.0f) });
     }
 
-    void ImplicitMeshes2D::SierpinskiTriangle(std::vector<VKryptMesh::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right, glm::vec2 top) {
+    void ImplicitMeshes2D::SierpinskiTriangle(std::vector<VKryptMesh2D::Vertex> &vertices, int depth, glm::vec2 left, glm::vec2 right, glm::vec2 top) {
         if (depth <= 0) {
             vertices.push_back({top});
             vertices.push_back({right});
@@ -31,7 +31,7 @@ namespace VKrypt {
         }
     }
 
-    void ImplicitMeshes2D::HexFlower(std::vector<VKryptMesh::Vertex> &vertices, const int depth, const glm::vec2 center, const float radius) {
+    void ImplicitMeshes2D::HexFlower(std::vector<VKryptMesh2D::Vertex> &vertices, const int depth, const glm::vec2 center, const float radius) {
         if (depth <= 0) {
             return;
         }
@@ -53,7 +53,7 @@ namespace VKrypt {
         }
     }
 
-    void ImplicitMeshes2D::Circle(std::vector<VKryptMesh::Vertex> &vertices, float radius, int segments) {
+    void ImplicitMeshes2D::Circle(std::vector<VKryptMesh2D::Vertex> &vertices, float radius, int segments) {
         vertices.clear();
 
         glm::vec3 color(1.0f); // white
@@ -74,7 +74,7 @@ namespace VKrypt {
         }
     }
 
-    void ImplicitMeshes2D::Star(std::vector<VKryptMesh::Vertex> &vertices, float outerRadius, float innerRadius, int points) {
+    void ImplicitMeshes2D::Star(std::vector<VKryptMesh2D::Vertex> &vertices, float outerRadius, float innerRadius, int points) {
         vertices.clear();
 
         glm::vec3 color(1.0f);

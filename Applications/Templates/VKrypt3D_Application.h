@@ -15,22 +15,23 @@
 #include <vector>
 
 #include "VKrypt_Application.h"
+#include "../../src/Core/Assets/GameObject/VKrypt_3D_game_object.h"
 
 namespace VKrypt {
 
-    class VKrypt2D_Application : public VKrypt_Application {
+    class VKrypt3D_Application : public VKrypt_Application {
         public:
         void run() override;
 
-        VKrypt2D_Application();
-        ~VKrypt2D_Application() override;
+        VKrypt3D_Application();
+        ~VKrypt3D_Application() override;
 
-        VKrypt2D_Application(const VKrypt2D_Application&) = delete;
-        VKrypt2D_Application &operator=(const VKrypt2D_Application&) = delete;
+        VKrypt3D_Application(const VKrypt3D_Application&) = delete;
+        VKrypt3D_Application &operator=(const VKrypt3D_Application&) = delete;
 
     private:
         void loadGameObjects() override;
-        std::vector<VKryptGameObject> gameObjects;
+        std::vector<VKryptGameObject3D> gameObjects;
     };
 
 }

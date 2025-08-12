@@ -96,8 +96,8 @@ class Vec2FieldSystem {
   }
 };
  
-std::unique_ptr<VKryptMesh> createSquareModel(VKryptDevice& device, glm::vec2 offset) {
-  std::vector<VKryptMesh::Vertex> vertices = {
+std::unique_ptr<VKryptMesh2D> createSquareModel(VKryptDevice& device, glm::vec2 offset) {
+  std::vector<VKryptMesh2D::Vertex> vertices = {
       {{-0.5f, -0.5f}},
       {{0.5f, 0.5f}},
       {{-0.5f, 0.5f}},
@@ -108,24 +108,24 @@ std::unique_ptr<VKryptMesh> createSquareModel(VKryptDevice& device, glm::vec2 of
   for (auto& v : vertices) {
     v.position += offset;
   }
-  return std::make_unique<VKryptMesh>(device, vertices);
+  return std::make_unique<VKryptMesh2D>(device, vertices);
 }
  
-std::unique_ptr<VKryptMesh> createCircleModel(VKryptDevice& device, unsigned int numSides) {
-  std::vector<VKryptMesh::Vertex> uniqueVertices{};
+std::unique_ptr<VKryptMesh2D> createCircleModel(VKryptDevice& device, unsigned int numSides) {
+  std::vector<VKryptMesh2D::Vertex> uniqueVertices{};
   for (int i = 0; i < numSides; i++) {
     float angle = i * glm::two_pi<float>() / numSides;
     uniqueVertices.push_back({{glm::cos(angle), glm::sin(angle)}});
   }
   uniqueVertices.push_back({});  // adds center vertex at 0, 0
  
-  std::vector<VKryptMesh::Vertex> vertices{};
+  std::vector<VKryptMesh2D::Vertex> vertices{};
   for (int i = 0; i < numSides; i++) {
     vertices.push_back(uniqueVertices[i]);
     vertices.push_back(uniqueVertices[(i + 1) % numSides]);
     vertices.push_back(uniqueVertices[numSides]);
   }
-  return std::make_unique<VKryptMesh>(device, vertices);
+  return std::make_unique<VKryptMesh2D>(device, vertices);
 }
  
 NBodyProblem_Application::NBodyProblem_Application() {
@@ -136,10 +136,10 @@ NBodyProblem_Application::~NBodyProblem_Application() {}
  
 void NBodyProblem_Application::run() {
   // create some models
-  std::shared_ptr<VKryptMesh> squareModel = createSquareModel(
+  std::shared_ptr<VKryptMesh2D> squareModel = createSquareModel(
       VKrypt_device,
       {.5f, .0f});  // offset model by .5 so rotation occurs at edge rather than center of square
-  std::shared_ptr<VKryptMesh> circleModel = createCircleModel(VKrypt_device, 64);
+  std::shared_ptr<VKryptMesh2D> circleModel = createCircleModel(VKrypt_device, 64);
 
   // Number of bodies
   const int numBodies = 2;

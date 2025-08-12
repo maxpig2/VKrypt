@@ -5,33 +5,34 @@
 #include <glm/gtc/constants.hpp>
 
 // std
-#include "VKrypt_2D_render_system.h"
+#include "VKrypt_3D_render_system.h"
 
 #include <array>
 #include <cassert>
 #include <stdexcept>
 
+#include "src/Core/Assets/Mesh/VKrypt_3D_mesh.h"
 #include "src/Renderer/Vulkan/Device/VKrypt_device.h"
+#include "src/Renderer/Vulkan/Pipeline/VKrypt_3D_pipeline.h"
 
 namespace VKrypt {
 
 struct SimplePushConstantData {
-  glm::mat2 transform{1.f};
-  glm::vec2 offset;
-  alignas(16) glm::vec3 color;
+  glm::mat4 transform{1.f};
+  alignas(16) glm::vec3 color{};
 };
 
-VKrypt2DRenderSystem::VKrypt2DRenderSystem(VKryptDevice& device, VkRenderPass renderPass)
+VKrypt3DRenderSystem::VKrypt3DRenderSystem(VKryptDevice& device, VkRenderPass renderPass)
     : VKrypt_device{device} {
   createPipelineLayout();
   createPipeline(renderPass);
 }
 
-VKrypt2DRenderSystem::~VKrypt2DRenderSystem() {
+VKrypt3DRenderSystem::~VKrypt3DRenderSystem() {
   vkDestroyPipelineLayout(VKrypt_device.device(), pipelineLayout, nullptr);
 }
 
-void VKrypt2DRenderSystem::createPipelineLayout() {
+void VKrypt3DRenderSystem::createPipelineLayout() {
   VkPushConstantRange pushConstantRange{};
   pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
   pushConstantRange.offset = 0;
@@ -49,31 +50,31 @@ void VKrypt2DRenderSystem::createPipelineLayout() {
   }
 }
 
-void VKrypt2DRenderSystem::createPipeline(VkRenderPass renderPass) {
+void VKrypt3DRenderSystem::createPipeline(VkRenderPass renderPass) {
   assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
-  PipelineConfigInfo pipelineConfig{};
-  VKryptPipeline::defaultPipelineConfigInfo(pipelineConfig);
+  PipelineConfigInfo3D pipelineConfig{};
+  VKryptPipeline3D::defaultPipelineConfigInfo(pipelineConfig);
   pipelineConfig.renderPass = renderPass;
   pipelineConfig.pipelineLayout = pipelineLayout;
-  VKrypt_pipeline = std::make_unique<VKryptPipeline>(
+  VKrypt_pipeline3D = std::make_unique<VKryptPipeline3D>(
       VKrypt_device,
-      "C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_2D_shader.vert.spv",
-      "C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_2D_shader.frag.spv",
+      "C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_3D_shader.vert.spv",
+      "C:/Users/maxtj/CLionProjects/VKrypt/shaders/simple_3D_shader.frag.spv",
       pipelineConfig);
 }
 
-void VKrypt2DRenderSystem::renderGameObjects(
-    VkCommandBuffer commandBuffer, std::vector<VKryptGameObject>& gameObjects) {
-  VKrypt_pipeline->bind(commandBuffer);
+void VKrypt3DRenderSystem::renderGameObjects(
+    VkCommandBuffer commandBuffer, std::vector<VKryptGameObject3D>& gameObjects) {
+  VKrypt_pipeline3D->bind(commandBuffer);
 
   for (auto& obj : gameObjects) {
-    obj.transform2d.rotation = glm::mod(obj.transform2d.rotation + 0.01f, glm::two_pi<float>());
+    obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
+    obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
 
     SimplePushConstantData push{};
-    push.offset = obj.transform2d.translation;
     push.color = obj.color;
-    push.transform = obj.transform2d.mat2();
+    push.transform = obj.transform.mat4();
 
     vkCmdPushConstants(
         commandBuffer,

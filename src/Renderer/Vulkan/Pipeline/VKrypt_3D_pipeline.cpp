@@ -2,8 +2,9 @@
 // Created by maxtj on 31/07/2025.
 //
 
-#include "../../../Core/Assets/Mesh/VKrypt_2D_mesh.h"
-#include "VKrypt_pipeline.h"
+#include "VKrypt_3D_pipeline.h"
+
+#include "../../../Core/Assets/Mesh/VKrypt_3D_mesh.h"
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
@@ -11,22 +12,22 @@
 
 namespace VKrypt {
 
-    VKryptPipeline::VKryptPipeline(
+    VKryptPipeline3D::VKryptPipeline3D(
         VKrypt::VKryptDevice& device,
         const std::string& vertFilepath,
         const std::string& fragFilepath,
-        const PipelineConfigInfo &configInfo) : VKryptDevice{device}
+        const PipelineConfigInfo3D &configInfo) : VKryptDevice{device}
     {
         createGraphicsPipeline(vertFilepath, fragFilepath, configInfo);
     }
 
-    VKryptPipeline::~VKryptPipeline() {
+    VKryptPipeline3D::~VKryptPipeline3D() {
         vkDestroyShaderModule(VKryptDevice.device(),vertShaderModule, nullptr);
         vkDestroyShaderModule(VKryptDevice.device(),fragShaderModule, nullptr);
         vkDestroyPipeline(VKryptDevice.device(),graphicsPipeline, nullptr);
     }
 
-    std::vector<char> VKryptPipeline::readFile(const std::string& filepath) {
+    std::vector<char> VKryptPipeline3D::readFile(const std::string& filepath) {
         std::ifstream file(filepath, std::ios::ate | std::ios::binary);
         if (!file.is_open()) {
             throw std::runtime_error("Failed to open  : " + filepath);
@@ -40,10 +41,11 @@ namespace VKrypt {
         return buffer;
     }
 
-    void VKryptPipeline::createGraphicsPipeline(
+
+    void VKryptPipeline3D::createGraphicsPipeline(
         const std::string& vertFilepath,
         const std::string& fragFilepath,
-        const PipelineConfigInfo configInfo) {
+        const PipelineConfigInfo3D configInfo) {
 
 
         assert(
@@ -79,8 +81,8 @@ namespace VKrypt {
         shaderStages[1].pNext = nullptr;
         shaderStages[1].pSpecializationInfo = nullptr;
 
-        auto bindingDescriptions = VKryptMesh2D::Vertex::getBindingDescriptions();
-        auto attributeDescriptions = VKryptMesh2D::Vertex::getAttributeDescriptions();
+        auto bindingDescriptions = VKryptMesh3D::Vertex3D::getBindingDescriptions();
+        auto attributeDescriptions = VKryptMesh3D::Vertex3D::getAttributeDescriptions();
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -115,7 +117,7 @@ namespace VKrypt {
 
     }
 
-    void VKryptPipeline::createShaderModule(const std::vector<char> &code, VkShaderModule &shaderModule) {
+    void VKryptPipeline3D::createShaderModule(const std::vector<char> &code, VkShaderModule &shaderModule) {
         VkShaderModuleCreateInfo createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = code.size();
@@ -125,11 +127,11 @@ namespace VKrypt {
         }
     }
 
-    void VKryptPipeline::bind(VkCommandBuffer commandBuffer) {
+    void VKryptPipeline3D::bind(VkCommandBuffer commandBuffer) {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
     }
 
-    void VKryptPipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
+    void VKryptPipeline3D::defaultPipelineConfigInfo(PipelineConfigInfo3D& configInfo) {
           configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
           configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
           configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;

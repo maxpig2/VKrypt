@@ -6,12 +6,14 @@
 #include <iostream>
 
 #include "Applications/Templates/VKrypt2D_Application.h"
-#include "Applications/NBodyProblem/NBodyProblem_Application.h"
+//#include "Applications/NBodyProblem/NBodyProblem_Application.h"
 
 #include <cstdlib>
 
+#include "Applications/Templates/VKrypt3D_Application.h"
+
 int main() {
-    VKrypt::NBodyProblem_Application app{};
+    VKrypt::VKrypt3D_Application app{};
 
     try {
         app.run();

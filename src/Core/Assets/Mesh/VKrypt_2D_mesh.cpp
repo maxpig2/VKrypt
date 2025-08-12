@@ -2,7 +2,7 @@
 // Created by maxtj on 31/07/2025.
 //
 
-#include "VKrypt_mesh.h"
+#include "VKrypt_2D_mesh.h"
 
 #include <ranges>
 #include <vector>
@@ -11,18 +11,18 @@
 
 namespace VKrypt {
 
-    VKryptMesh::VKryptMesh(
+    VKryptMesh2D::VKryptMesh2D(
         VKryptDevice& device,
         const std::vector<Vertex> &vertices): VKrypt_device{device} {
         createVertexBuffers(vertices);
     }
 
-    VKryptMesh::~VKryptMesh() {
+    VKryptMesh2D::~VKryptMesh2D() {
         vkDestroyBuffer(VKrypt_device.device(), vertexBuffer, nullptr);
         vkFreeMemory(VKrypt_device.device(), vertexBufferMemory, nullptr);
     }
 
-    void VKryptMesh::createVertexBuffers(const std::vector<Vertex> &vertices) {
+    void VKryptMesh2D::createVertexBuffers(const std::vector<Vertex> &vertices) {
         vertexCount = static_cast<uint32_t>(vertices.size());
         assert(vertexCount >= 3 && "Vertex count must be at least 3");
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
@@ -37,17 +37,17 @@ namespace VKrypt {
         vkUnmapMemory(VKrypt_device.device(), vertexBufferMemory);
     }
 
-    void VKryptMesh::draw(VkCommandBuffer commandBuffer) {
+    void VKryptMesh2D::draw(VkCommandBuffer commandBuffer) {
         vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
     }
 
-    void VKryptMesh::bind(VkCommandBuffer commandBuffer) {
+    void VKryptMesh2D::bind(VkCommandBuffer commandBuffer) {
         VkBuffer vertexBuffers[] = {vertexBuffer};
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
     }
 
-    std::vector<VkVertexInputBindingDescription> VKryptMesh::Vertex::getBindingDescriptions() {
+    std::vector<VkVertexInputBindingDescription> VKryptMesh2D::Vertex::getBindingDescriptions() {
         std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);
         bindingDescriptions[0].binding = 0;
         bindingDescriptions[0].stride = sizeof(Vertex);
@@ -55,7 +55,7 @@ namespace VKrypt {
         return bindingDescriptions;
     }
 
-    std::vector<VkVertexInputAttributeDescription> VKryptMesh::Vertex::getAttributeDescriptions() {
+    std::vector<VkVertexInputAttributeDescription> VKryptMesh2D::Vertex::getAttributeDescriptions() {
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions(2);
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;

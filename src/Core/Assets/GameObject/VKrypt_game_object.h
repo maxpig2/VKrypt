@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../Mesh/VKrypt_mesh.h"
+#include "../Mesh/VKrypt_2D_mesh.h"
 
 #include <memory>
 
@@ -47,7 +47,7 @@ namespace VKrypt {
 
         id_t getId() {return id;}
 
-        std::shared_ptr<VKrypt::VKryptMesh> mesh{};
+        std::shared_ptr<VKrypt::VKryptMesh2D> mesh{};
         glm::vec3 color{};
         Transform2dComponent transform2d{};
         RigidBody2dComponent rigidBody2d{};

@@ -40,11 +40,11 @@ namespace VKrypt {
     }
 
     void VKrypt2D_Application::loadGameObjects() {
-        std::vector<VKryptMesh::Vertex> vertices;
+        std::vector<VKryptMesh2D::Vertex> vertices;
 
         ImplicitMeshes2D::Triangle(vertices);
 
-        auto VKrypt_mesh = std::make_shared<VKryptMesh>(VKrypt_device,vertices);
+        auto VKrypt_mesh = std::make_shared<VKryptMesh2D>(VKrypt_device,vertices);
 
         auto triangle = VKryptGameObject::createGameObject();
         triangle.mesh = VKrypt_mesh;
