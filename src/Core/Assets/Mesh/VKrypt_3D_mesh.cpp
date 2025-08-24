@@ -11,40 +11,102 @@
 
 namespace VKrypt {
 
-    VKryptMesh3D::VKryptMesh3D(
-        VKryptDevice& device,
-        const std::vector<Vertex3D> &vertices): VKrypt_device{device} {
-        createVertexBuffers(vertices);
+    VKryptMesh3D::VKryptMesh3D(VKryptDevice &device, const VKryptMesh3D::Builder &builder) : VKrypt_device{device} {
+        createVertexBuffers(builder.vertices);
+        createIndexBuffers(builder.indices);
     }
 
     VKryptMesh3D::~VKryptMesh3D() {
         vkDestroyBuffer(VKrypt_device.device(), vertexBuffer, nullptr);
         vkFreeMemory(VKrypt_device.device(), vertexBufferMemory, nullptr);
+
+        if (hasIndexBuffer) {
+            vkDestroyBuffer(VKrypt_device.device(), indexBuffer, nullptr);
+            vkFreeMemory(VKrypt_device.device(), indexBufferMemory, nullptr);
+        }
     }
 
     void VKryptMesh3D::createVertexBuffers(const std::vector<Vertex3D> &vertices) {
         vertexCount = static_cast<uint32_t>(vertices.size());
         assert(vertexCount >= 3 && "Vertex count must be at least 3");
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
-        VKrypt_device.createBuffer(bufferSize,VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        VKrypt_device.createBuffer(bufferSize,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            stagingBuffer,
+        stagingBufferMemory);
+
+        void *data;
+        vkMapMemory(VKrypt_device.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
+        memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(VKrypt_device.device(), stagingBufferMemory);
+
+        VKrypt_device.createBuffer(
+            bufferSize,
+            VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             vertexBuffer,
             vertexBufferMemory);
 
+        VKrypt_device.copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+
+        vkDestroyBuffer(VKrypt_device.device(), stagingBuffer, nullptr);
+        vkFreeMemory(VKrypt_device.device(), stagingBufferMemory, nullptr);
+    }
+
+    void VKryptMesh3D::createIndexBuffers(const std::vector<uint32_t> &indices) {
+        indexCount = static_cast<uint32_t>(indices.size());
+        hasIndexBuffer = indexCount > 0;
+
+        if (!hasIndexBuffer) {
+            return;
+        }
+
+        VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
+
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        VKrypt_device.createBuffer(
+            bufferSize,
+            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            stagingBuffer,
+            stagingBufferMemory);
+
         void *data;
-        vkMapMemory(VKrypt_device.device(), vertexBufferMemory, 0, bufferSize, 0, &data);
-        memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-        vkUnmapMemory(VKrypt_device.device(), vertexBufferMemory);
+        vkMapMemory(VKrypt_device.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
+        memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
+        vkUnmapMemory(VKrypt_device.device(), stagingBufferMemory);
+
+        VKrypt_device.createBuffer(
+            bufferSize,
+            VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+            indexBuffer,
+            indexBufferMemory);
+
+        VKrypt_device.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+
+        vkDestroyBuffer(VKrypt_device.device(), stagingBuffer, nullptr);
+        vkFreeMemory(VKrypt_device.device(), stagingBufferMemory, nullptr);
     }
 
     void VKryptMesh3D::draw(VkCommandBuffer commandBuffer) {
-        vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+        if (hasIndexBuffer) {
+            vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+        } else {
+            vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+        }
     }
 
     void VKryptMesh3D::bind(VkCommandBuffer commandBuffer) {
         VkBuffer vertexBuffers[] = {vertexBuffer};
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+        if (hasIndexBuffer) {
+            vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        }
     }
 
     std::vector<VkVertexInputBindingDescription> VKryptMesh3D::Vertex3D::getBindingDescriptions() {

@@ -20,7 +20,12 @@ namespace VKrypt {
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
         };
 
-        VKryptMesh3D( VKryptDevice &device,const std::vector<Vertex3D> &vertices);
+        struct Builder {
+            std::vector<Vertex3D> vertices{};
+            std::vector<uint32_t> indices{};
+        };
+
+        VKryptMesh3D(VKryptDevice &device, const VKryptMesh3D::Builder &builder);
         ~VKryptMesh3D();
 
         VKryptMesh3D(const VKryptMesh3D&) = delete;
@@ -31,11 +36,16 @@ namespace VKrypt {
 
         private:
         void createVertexBuffers(const std::vector<Vertex3D> &vertices);
+        void createIndexBuffers(const std::vector<uint32_t> &indices);
         VKryptDevice &VKrypt_device;
         VkBuffer vertexBuffer{};
         VkDeviceMemory vertexBufferMemory{};
         uint32_t vertexCount{};
 
+        bool hasIndexBuffer = false;
+        VkBuffer indexBuffer;
+        VkDeviceMemory indexBufferMemory;
+        uint32_t indexCount;
 
     };
 }
