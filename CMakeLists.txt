@@ -52,6 +52,7 @@ add_executable(VKrypt main.cpp
         VKrypt_camera.cpp
         src/Core/Assets/Input/Keyboard_Controller.h
         src/Core/Assets/Input/Keyboard_Controller.cpp
+        src/Core/VKrypt_utils.h
 
 )
 

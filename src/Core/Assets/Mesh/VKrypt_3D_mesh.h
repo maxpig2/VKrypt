@@ -7,6 +7,7 @@
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <memory>
 #include <glm/glm.hpp>
 
 namespace VKrypt {
@@ -16,13 +17,20 @@ namespace VKrypt {
         struct Vertex3D {
             glm::vec3 position {};
             glm::vec3 color = glm::vec3(1.0f);
+            glm::vec3 normal{};
+            glm::vec2 uv{};
             static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
+            bool operator==(const Vertex3D &other) const {
+                return position == other.position && color == other.color && normal == other.normal &&
+                       uv == other.uv;
+            }
         };
 
         struct Builder {
             std::vector<Vertex3D> vertices{};
             std::vector<uint32_t> indices{};
+            void loadModel(const std::string &filepath);
         };
 
         VKryptMesh3D(VKryptDevice &device, const VKryptMesh3D::Builder &builder);
@@ -30,6 +38,9 @@ namespace VKrypt {
 
         VKryptMesh3D(const VKryptMesh3D&) = delete;
         VKryptMesh3D &operator=(const VKryptMesh3D&) = delete;
+
+        static std::unique_ptr<VKryptMesh3D> createModelFromFile(
+            VKryptDevice &device, const std::string &filepath);
 
         void bind(VkCommandBuffer commandBuffer);
         void draw(VkCommandBuffer commandBuffer);
